@@ -15,6 +15,17 @@ Send the potential active power produced by the pv installation depending on the
 |Name             |data_type             |unit             |description             |
 |-----------------|----------------------|-----------------|------------------------|
 |potential_active_power|VECTOR|W|The potential active power produced by the PV installation for the coming 12 hours based upon the weather.|
+### current pv power production 
+
+Send current power production of the pv installation
+#### Input parameters
+|Name            |esdl_type            |data_type            |unit            |description            |
+|----------------|---------------------|---------------------|----------------|-----------------------|
+|solar_irradiance|EnvironmentalProfiles|DOUBLE|W|The actual pv power production for the coming fifteen minutes|
+#### Output values
+|Name             |data_type             |unit             |description             |
+|-----------------|----------------------|-----------------|------------------------|
+|pv_active_power|DOUBLE|W|The amount of active power produced by the pv installation at this moment.|
 
 ### Relevant links
 |Link             |description             |

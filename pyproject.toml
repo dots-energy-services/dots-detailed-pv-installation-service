@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "pvsystemservice"
+name = "PvInstallationCalculationService"
 version = "0.0.1"
 authors = [
   { name="Gijs Verhoeven", email="g.verhoeven.1@tue.nl" },
