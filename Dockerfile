@@ -5,8 +5,8 @@ FROM python:3.14
 RUN mkdir /app/
 WORKDIR /app
 
-COPY src/pvsystemservice ./
+COPY src/PvInstallationCalculationService ./
 COPY requirements.txt ./
 RUN pip install -r requirements.txt
 
-ENTRYPOINT python3 pvsystemservice.py
+ENTRYPOINT python3 pv_installation_calculation_service.py
