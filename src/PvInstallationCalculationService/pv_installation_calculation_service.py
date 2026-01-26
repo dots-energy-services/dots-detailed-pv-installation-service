@@ -56,6 +56,8 @@ class CalculationServicePVSystem(PvInstallationCalculationServiceBase):
 
         ret_val = CurrentPvPowerProductionOutput(solar_power)
 
+        self.influx_connector.set_time_step_data_point(esdl_id, "current_pv_power_production", simulation_time, solar_power)
+
         return ret_val
 
 if __name__ == "__main__":
