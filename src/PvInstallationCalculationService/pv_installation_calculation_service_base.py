@@ -26,7 +26,7 @@ class PvInstallationCalculationServiceBase(HelicsSimulationExecutor):
                                     esdl_type="PVInstallation",
                                     output_name="potential_active_power",
                                     output_unit="W", 
-                                    data_type="VECTOR"),
+                                    data_type=h.HelicsDataType.VECTOR),
         ]
         predict_solar_power_information = HelicsCalculationInformation(
             time_period_in_seconds=900,
@@ -54,7 +54,7 @@ class PvInstallationCalculationServiceBase(HelicsSimulationExecutor):
                                     esdl_type="PVInstallation",
                                     output_name="pv_active_power",
                                     output_unit="W", 
-                                    data_type="DOUBLE"),
+                                    data_type=h.HelicsDataType.DOUBLE),
         ]
         current_pv_power_production_information = HelicsCalculationInformation(
             time_period_in_seconds=900,
