@@ -45,7 +45,7 @@ class PvInstallationCalculationServiceBase(HelicsSimulationExecutor):
         
             SubscriptionDescription(esdl_type="EnvironmentalProfiles", 
                                     input_name="current_solar_irradiance", 
-                                    input_unit="W", 
+                                    input_unit="Wm2", 
                                     input_type=h.HelicsDataType.DOUBLE),
         ]
         current_pv_power_production_outputs = [

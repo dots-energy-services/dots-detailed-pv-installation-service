@@ -44,7 +44,7 @@
                     "esdl_type" : "EnvironmentalProfiles",
                     "data_type" : "DOUBLE",
                     "description" : "The actual pv power production for the coming fifteen minutes",
-                    "unit" : "W"
+                    "unit" : "Wm2"
                 }
             ],
             "outputs" : [
