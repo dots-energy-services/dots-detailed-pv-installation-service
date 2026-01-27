@@ -3,18 +3,22 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "pvsystemservice"
+name = "PvInstallationCalculationService"
 version = "0.0.1"
 authors = [
   { name="Gijs Verhoeven", email="g.verhoeven.1@tue.nl" },
 ]
 description = "PV System Service package"
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.12"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
+]
+dependencies = [
+  "helics==3.6.1",
+  "dots_infrastructure==1.0.9"
 ]
 
 [project.urls]

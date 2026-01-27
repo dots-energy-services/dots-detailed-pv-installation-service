@@ -8,40 +8,10 @@ from dots_infrastructure.Logger import LOGGER
 from dots_infrastructure.CalculationServiceHelperFunctions import get_single_param_with_name
 from esdl import EnergySystem
 
-class CalculationServicePVSystem(HelicsSimulationExecutor):
+from PvInstallationCalculationService.pv_installation_calculation_service_base import PvInstallationCalculationServiceBase
+from PvInstallationCalculationService.pv_installation_calculation_service_dataclasses import CurrentPvPowerProductionOutput, PredictSolarPowerOutput
 
-    def __init__(self):
-        super().__init__()
-
-        subscriptions_values = [
-            SubscriptionDescription(esdl_type="EnvironmentalProfiles",
-                                    input_name="solar_irradiance",
-                                    input_unit="Wm2",
-                                    input_type=h.HelicsDataType.VECTOR)
-        ]
-
-        publication_values = [
-            PublicationDescription(global_flag=True,
-                                   esdl_type="PVInstallation",
-                                   output_name="potential_active_power",
-                                   output_unit="W",
-                                   data_type=h.HelicsDataType.VECTOR)
-        ]
-
-        pvsystem_period_in_seconds = 900
-
-        calculation_information = HelicsCalculationInformation(
-            time_period_in_seconds=pvsystem_period_in_seconds,
-            offset=0,
-            uninterruptible=False,
-            wait_for_current_time_update=False,
-            terminate_on_error=True,
-            calculation_name="predict_solar_power",
-            inputs=subscriptions_values,
-            outputs=publication_values,
-            calculation_function=self.predict_solar_power
-        )
-        self.add_calculation(calculation_information)
+class CalculationServicePVSystem(PvInstallationCalculationServiceBase):
 
     def init_calculation_service(self, energy_system: esdl.EnergySystem):
         LOGGER.info("init calculation service")
@@ -68,8 +38,25 @@ class CalculationServicePVSystem(HelicsSimulationExecutor):
 
         solar_power = [panel_efficiency * surface_area * irr for irr in solar_irradiance]
 
-        ret_val = {}
-        ret_val["potential_active_power"] = solar_power
+        ret_val = PredictSolarPowerOutput(solar_power)
+
+        return ret_val
+    
+
+    def current_pv_power_production(self, param_dict : dict, simulation_time : datetime, time_step_number : TimeStepInformation, esdl_id : EsdlId, energy_system : EnergySystem):
+        solar_irradiance = get_single_param_with_name(param_dict, "current_solar_irradiance")
+
+        surface_area = self.surface_area[esdl_id]
+        panel_efficiency = self.panel_efficiency[esdl_id]
+
+        assert surface_area > 0.0, "provide surface area with value bigger than 0"
+        assert panel_efficiency > 0.0, "provide panel efficiency with value bigger than 0"
+
+        solar_power = panel_efficiency * surface_area * solar_irradiance
+
+        ret_val = CurrentPvPowerProductionOutput(solar_power)
+
+        self.influx_connector.set_time_step_data_point(esdl_id, "current_pv_power_production", simulation_time, solar_power)
 
         return ret_val
 

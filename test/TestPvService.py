@@ -1,12 +1,13 @@
 from datetime import datetime
 import unittest
-from pvsystemservice.pvsystemservice import CalculationServicePVSystem
 from dots_infrastructure.DataClasses import SimulatorConfiguration, SimulaitonDataPoint, TimeStepInformation
 from dots_infrastructure.test_infra.InfluxDBMock import InfluxDBMock
 import helics as h
 from esdl.esdl_handler import EnergySystemHandler
 
 from dots_infrastructure import CalculationServiceHelperFunctions
+
+from PvInstallationCalculationService.pv_installation_calculation_service import CalculationServicePVSystem
 
 BROKER_TEST_PORT = 23404
 START_DATE_TIME = datetime(2024, 1, 1, 0, 0, 0)
@@ -41,7 +42,27 @@ class Test(unittest.TestCase):
         panel_efficiency = 0.2
         surface_area = 32
         expected_outcome = [panel_efficiency * surface_area * irr for irr in pv_dispatch_params["solar_irradiance"]]
-        self.assertListEqual(ret_val["potential_active_power"], expected_outcome)
+        self.assertListEqual(ret_val.potential_active_power, expected_outcome)
+
+
+    def test_current_pv_power_production(self):
+
+        # Arrange
+        service = CalculationServicePVSystem()
+        service.influx_connector = InfluxDBMock()
+        pv_dispatch_params = {}
+
+        pv_dispatch_params["current_solar_irradiance"] = 500.0
+        service.init_calculation_service(self.energy_system)
+
+        # Execute
+        ret_val = service.current_pv_power_production(pv_dispatch_params, datetime(2024,1,1), TimeStepInformation(1,2), "03443715-c345-45b2-9b95-bd6906ac9c83", self.energy_system)
+
+        # Assert
+        panel_efficiency = 0.2
+        surface_area = 32
+        expected_outcome = panel_efficiency * surface_area * pv_dispatch_params["current_solar_irradiance"]
+        self.assertEqual(ret_val.pv_active_power, expected_outcome)
 
 if __name__ == '__main__':
     unittest.main()
