@@ -18,13 +18,11 @@ class CalculationServicePVSystem(PvInstallationCalculationServiceBase):
         self.surface_area: dict[EsdlId, float] = {}
         self.panel_efficiency: dict[EsdlId, float] = {}
 
-        for esdl_id in self.simulator_configuration.esdl_ids:
-            for obj in energy_system.eAllContents():
-                if hasattr(obj, "id") and obj.id == esdl_id:
-                    pvsystem = obj
-
-            self.surface_area[esdl_id]      = pvsystem.surfaceArea
-            self.panel_efficiency[esdl_id]  = pvsystem.panelEfficiency
+        for obj in energy_system.eAllContents():
+            if hasattr(obj, "id") and obj.id in self.simulator_configuration.esdl_ids:
+                pvsystem = obj
+                self.surface_area[obj.id]      = pvsystem.surfaceArea
+                self.panel_efficiency[obj.id]  = pvsystem.panelEfficiency
 
 
     def predict_solar_power(self, param_dict : dict, simulation_time : datetime, time_step_number : TimeStepInformation, esdl_id : EsdlId, energy_system : EnergySystem):
