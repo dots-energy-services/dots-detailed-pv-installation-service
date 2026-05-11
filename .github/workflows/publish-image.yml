@@ -10,7 +10,7 @@ on:
       - v*
   pull_request:
 env:
-  IMAGE_NAME: pvsystemservice
+  IMAGE_NAME: detailedpvsystemservice
 jobs:
   push:
     runs-on: ubuntu-latest
